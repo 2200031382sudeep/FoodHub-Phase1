@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}FoodExpress – Order food online{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <div class="container hero-inner">
+    <h1>Hungry? Your next meal is <span>minutes away</span>.</h1>
+    <p>Order from the best restaurants near you, delivered hot to your door.</p>
+    <form class="search-box" id="searchForm" role="search">
+      <input type="search" id="searchInput" placeholder="Search for restaurants or dishes" aria-label="Search restaurants or dishes" autocomplete="off">
+      <button type="submit" class="btn">Search</button>
+    </form>
+  </div>
+</section>
+
+<section class="container section">
+  <h2>What's on your mind?</h2>
+  <div class="category-grid">
+    {% for name, icon in categories %}
+    <a href="#restaurants" class="category-card">
+      <span class="category-icon">{{ icon }}</span>
+      <span>{{ name }}</span>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+
+<section class="container section" id="offers">
+  <h2>Special discounts</h2>
+  <div class="empty-state">
+    <p>🎟️ Coupons will appear here once the offers system is built (Phase 11).</p>
+  </div>
+</section>
+
+<section class="container section" id="restaurants">
+  <h2>Popular restaurants</h2>
+  {% if restaurants %}
+  <div class="restaurant-grid">
+    {% for r in restaurants %}
+    <a href="{{ url_for('main.restaurant', rid=r.id) }}" class="restaurant-card">
+      {% if r.image_url %}
+      <img src="{{ r.image_url }}" alt="{{ r.name }}" loading="lazy">
+      {% else %}
+      <div class="restaurant-img-fallback">🍽️</div>
+      {% endif %}
+      <div class="restaurant-body">
+        <h3>{{ r.name }}</h3>
+        <p class="muted">{{ r.cuisine }}</p>
+        <p class="rest-meta"><span>⭐ {{ r.rating }}</span><span>🕒 {{ r.delivery_time }} mins</span></p>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <p>🍽️ No restaurants yet. The admin can add them from the Admin page.</p>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

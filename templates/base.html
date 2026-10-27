@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}FoodExpress{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/responsive.css') }}">
+</head>
+<body>
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a href="/" class="logo">Food<span>Express</span></a>
+
+      <button class="location-btn" type="button" id="locationBtn" aria-label="Choose delivery location">
+        📍 <span id="locationText">Select location</span>
+      </button>
+
+      <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false">☰</button>
+
+      <nav class="nav-links" id="navLinks">
+        <a href="/">Home</a>
+        <a href="#restaurants">Restaurants</a>
+        <a href="#offers">Offers</a>
+        <a href="#" data-coming="Cart arrives in Phase 8">🛒 Cart</a>
+        {% if current_user %}
+          <span>Hi, {{ current_user.name.split()[0] }}</span>
+          {% if current_user.is_admin %}<a href="{{ url_for('admin.dashboard') }}">Admin</a>{% endif %}
+          <form method="post" action="{{ url_for('auth.logout') }}">
+            <button type="submit" class="btn btn-small">Logout</button>
+          </form>
+        {% else %}
+          <a href="{{ url_for('auth.login') }}" class="btn btn-small">Login / Register</a>
+        {% endif %}
+      </nav>
+    </div>
+  </header>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <div class="container flash-wrap">
+      {% for category, message in messages %}
+        <div class="flash {{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  {% endwith %}
+
+  <main>{% block content %}{% endblock %}</main>
+
+  <footer class="footer">
+    <div class="container footer-grid">
+      <div>
+        <a href="/" class="logo logo-light">Food<span>Express</span></a>
+        <p>Hot food, delivered fast. Order from your favourite local restaurants.</p>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <a href="#">About us</a><a href="#">Careers</a><a href="#">Partner with us</a>
+      </div>
+      <div>
+        <h4>Contact</h4>
+        <p>📧 support@foodexpress.example</p>
+        <p>📞 +91 98765 43210</p>
+        <p>🏢 Bengaluru, India</p>
+      </div>
+    </div>
+    <p class="copyright">© 2026 FoodExpress. All rights reserved.</p>
+  </footer>
+
+  <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

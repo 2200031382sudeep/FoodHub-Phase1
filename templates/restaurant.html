@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}{{ r.name }} – FoodExpress{% endblock %}
+{% block content %}
+<section class="rest-hero">
+  <div class="container">
+    <p><a href="/" class="back-link">← Back to home</a></p>
+    <h1>{{ r.name }}</h1>
+    <p>{{ r.cuisine }} · {{ r.address }}</p>
+    <p class="rest-meta"><span>⭐ {{ r.rating }}</span><span>🕒 {{ r.delivery_time }} mins</span>
+      {% if not r.is_active %}<span>Hidden from customers</span>{% endif %}</p>
+  </div>
+</section>
+
+<section class="container section">
+  <h2>Menu</h2>
+  {% if r.items %}
+  <div class="menu-grid">
+    {% for i in r.items %}
+    <div class="menu-card {% if not i.is_available %}sold-out{% endif %}">
+      {% if i.image_url %}<img src="{{ i.image_url }}" alt="{{ i.name }}" loading="lazy">{% endif %}
+      <div class="menu-body">
+        <h3><span class="dot {{ 'veg' if i.is_veg else 'nonveg' }}"></span> {{ i.name }}</h3>
+        {% if i.description %}<p class="muted">{{ i.description }}</p>{% endif %}
+        <div class="menu-foot">
+          <strong>₹{{ i.price }}</strong>
+          {% if i.is_available %}
+          <a href="#" class="btn btn-small" data-coming="Cart arrives in the next step">Add</a>
+          {% else %}
+          <span class="badge off">Sold out</span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state"><p>This restaurant hasn't added its menu yet.</p></div>
+  {% endif %}
+</section>
+{% endblock %}

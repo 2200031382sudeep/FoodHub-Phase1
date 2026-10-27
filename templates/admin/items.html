@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}{{ restaurant.name }} menu – FoodExpress{% endblock %}
+{% block content %}
+<section class="container section">
+  <p><a href="{{ url_for('admin.dashboard') }}">← All restaurants</a></p>
+  <div class="admin-head">
+    <h2>{{ restaurant.name }} – menu</h2>
+    <a href="{{ url_for('admin.item_new', rid=restaurant.id) }}" class="btn btn-small">+ Add item</a>
+  </div>
+
+  {% if restaurant.items %}
+  <div class="table-wrap">
+    <table class="admin-table">
+      <thead>
+        <tr><th>Item</th><th>Price</th><th>Type</th><th>Status</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        {% for i in restaurant.items %}
+        <tr>
+          <td><strong>{{ i.name }}</strong>{% if i.description %}<br><small>{{ i.description }}</small>{% endif %}</td>
+          <td>₹{{ i.price }}</td>
+          <td>{% if i.is_veg %}<span class="dot veg"></span> Veg{% else %}<span class="dot nonveg"></span> Non-veg{% endif %}</td>
+          <td>{% if i.is_available %}<span class="badge on">Available</span>{% else %}<span class="badge off">Sold out</span>{% endif %}</td>
+          <td class="actions">
+            <a class="btn-outline" href="{{ url_for('admin.item_edit', rid=restaurant.id, iid=i.id) }}">Edit</a>
+            <form method="post" action="{{ url_for('admin.item_delete', rid=restaurant.id, iid=i.id) }}"
+                  onsubmit="return confirm('Delete {{ i.name|e }}?');">
+              <button type="submit" class="btn-outline danger">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state"><p>No menu items yet. Click <strong>+ Add item</strong>.</p></div>
+  {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} – FoodExpress{% endblock %}
+{% block content %}
+<div class="auth-card wide">
+  <h1>{{ title }}</h1>
+  <p class="muted">{{ restaurant.name }}</p>
+  <form method="post">
+    <div class="form-group">
+      <label for="name">Item name</label>
+      <input type="text" id="name" name="name" value="{{ i.name or '' }}" maxlength="120" required>
+    </div>
+    <div class="form-group">
+      <label for="description">Short description (optional)</label>
+      <input type="text" id="description" name="description" value="{{ i.description or '' }}" maxlength="255">
+    </div>
+    <div class="form-group">
+      <label for="price">Price (₹)</label>
+      <input type="number" id="price" name="price" step="0.01" min="0.01" value="{{ i.price or '' }}" required>
+    </div>
+    <div class="form-group">
+      <label for="image_url">Image link (optional, starts with https://)</label>
+      <input type="url" id="image_url" name="image_url" value="{{ i.image_url or '' }}" maxlength="255">
+    </div>
+    <label class="check"><input type="checkbox" name="is_veg" {% if i.is_veg %}checked{% endif %}> Vegetarian</label>
+    <label class="check"><input type="checkbox" name="is_available" {% if i.is_available %}checked{% endif %}> Available to order</label>
+    <button type="submit" class="btn">Save</button>
+    <p class="auth-switch"><a href="{{ url_for('admin.items', rid=restaurant.id) }}">Cancel</a></p>
+  </form>
+</div>
+{% endblock %}

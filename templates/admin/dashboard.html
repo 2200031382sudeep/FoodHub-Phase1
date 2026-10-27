@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Admin – FoodExpress{% endblock %}
+{% block content %}
+<section class="container section">
+  <div class="admin-head">
+    <h2>Restaurants</h2>
+    <a href="{{ url_for('admin.restaurant_new') }}" class="btn btn-small">+ Add restaurant</a>
+  </div>
+
+  {% if restaurants %}
+  <div class="table-wrap">
+    <table class="admin-table">
+      <thead>
+        <tr><th>Name</th><th>Cuisine</th><th>Items</th><th>Status</th><th>Actions</th></tr>
+      </thead>
+      <tbody>
+        {% for r in restaurants %}
+        <tr>
+          <td><strong>{{ r.name }}</strong><br><small>{{ r.address }}</small></td>
+          <td>{{ r.cuisine }}</td>
+          <td>{{ r.items|length }}</td>
+          <td>{% if r.is_active %}<span class="badge on">Visible</span>{% else %}<span class="badge off">Hidden</span>{% endif %}</td>
+          <td class="actions">
+            <a class="btn-outline" href="{{ url_for('admin.items', rid=r.id) }}">Menu</a>
+            <a class="btn-outline" href="{{ url_for('admin.restaurant_edit', rid=r.id) }}">Edit</a>
+            <form method="post" action="{{ url_for('admin.restaurant_delete', rid=r.id) }}"
+                  onsubmit="return confirm('Delete {{ r.name|e }} and all its menu items?');">
+              <button type="submit" class="btn-outline danger">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <p>No restaurants yet. Click <strong>+ Add restaurant</strong> to create the first one.</p>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}
